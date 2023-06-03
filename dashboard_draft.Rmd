@@ -1,0 +1,162 @@
+---
+title: "dashboard_draft"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+  
+```{r setup, include=FALSE}
+
+rm(list=ls())
+
+library(flexdashboard)
+library(XML)
+library(rvest)
+library(dplyr)
+library(stringr)
+library(writexl)
+library(readxl)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+today <- Sys.Date()
+bitcoin <- read_xlsx("binance.xlsx")
+bitcoin <- bitcoin[order(bitcoin$close_time, decreasing = T),]
+cpi <- read.csv("CPI.csv")
+cpi <- cpi[order(cpi$DATE, decreasing = T),]
+dollar <- read.csv("dollar_index.csv")
+dollar <- dollar[order(dollar$DATE, decreasing = T),]
+fed <- read.csv("fedfunds.csv")
+fed <- fed[order(fed$DATE, decreasing = T),]
+GDP <- read.csv("GDP_forecast_US.csv")
+GDP <- GDP[order(GDP$TIME, decreasing = T),]
+GDP
+nasdaq <- read.csv("nasdaq100.csv")
+nasdaq <- nasdaq[order(nasdaq$DATE, decreasing = T),]
+oil<- read.csv("oil.csv")
+oil <- oil[order(oil$DATE, decreasing = T),]
+unem<- read.csv("unem_rate.csv")
+unem <- unem[order(unem$DATE, decreasing = T),]
+gold <- read_xlsx("xauusd.xlsx")
+gold <- gold[order(gold$X1, decreasing = T), ]
+```
+
+Main
+=====================================
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### 비트코인 관련 정보 (**Issued at `r today`**)
+
+
+```{r}
+bitcoin 
+bitcoin %>% head(20) %>%
+  kable(format="html", escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Chat-GPT Plug-in
+
+
+
+
+
+
+
+거시경제지표
+=====================================
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### CPI (**Issued at `r today`**)
+
+
+```{r}
+cpi %>% head(20) %>%
+  kable(format="html", escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+
+### GDP forecast (**Issued at `r today`**)
+
+```{r}
+GDP %>% head(20) %>%
+  kable(format="html", escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+### 미국 금리 (**Issued at `r today`**)
+
+```{r}
+fed %>% head(20) %>%
+  kable(format="html", escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+
+### 실업률 (**Issued at `r today`**)
+
+```{r}
+unem %>% head(20) %>%
+  kable(format="html", escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+
+
+투자관련지수
+=====================================
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+### 나스닥 (**Issued at `r today`**)
+
+```{r}
+nasdaq %>% head(20) %>%
+  kable(format="html", escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+### 국제 유가 (**Issued at `r today`**)
+
+
+```{r}
+oil %>% head(20) %>%
+  kable(format="html", escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+### 금 (**Issued at `r today`**)
+
+```{r}
+gold %>% head(20) %>%
+  kable(format="html", escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+
+### 달러지수 (**Issued at `r today`**)
+
+```{r}
+dollar %>% head(20) %>%
+  kable(format="html", escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+
+
+
