@@ -1,5 +1,5 @@
 ---
-title: "dashboard_draft"
+title: "cryptocurrency research"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -21,18 +21,21 @@ library(readxl)
 library(tidyr)
 library(knitr)
 library(kableExtra)
+library(dygraphs)
+library(ggplot2)
 today <- Sys.Date()
 bitcoin <- read_xlsx("binance.xlsx")
 bitcoin <- bitcoin[order(bitcoin$close_time, decreasing = T),]
+ether <- read_xlsx("ethereum.xlsx")
+ether <- ether[order(ether$close_time, decreasing = T),]
 cpi <- read.csv("CPI.csv")
-cpi <- cpi[order(cpi$DATE, decreasing = T),]
+
 dollar <- read.csv("dollar_index.csv")
 dollar <- dollar[order(dollar$DATE, decreasing = T),]
 fed <- read.csv("fedfunds.csv")
 fed <- fed[order(fed$DATE, decreasing = T),]
 GDP <- read.csv("GDP_forecast_US.csv")
 GDP <- GDP[order(GDP$TIME, decreasing = T),]
-GDP
 nasdaq <- read.csv("nasdaq100.csv")
 nasdaq <- nasdaq[order(nasdaq$DATE, decreasing = T),]
 oil<- read.csv("oil.csv")
@@ -41,122 +44,90 @@ unem<- read.csv("unem_rate.csv")
 unem <- unem[order(unem$DATE, decreasing = T),]
 gold <- read_xlsx("xauusd.xlsx")
 gold <- gold[order(gold$X1, decreasing = T), ]
+bitcoin <- bitcoin[,1:5]
+colnames(bitcoin) <- c('date', 'open', 'high', 'low', 'close')
+ether <- ether[,1:5]
+colnames(ether) <- c('date', 'open', 'high', 'low', 'close')
+colnames(cpi) <- c('date', 'CPI') # 월간
+cpi['CPI'] <- cpi$CPI/lag(cpi$CPI) -1
+cpi <- cpi[order(cpi$date, decreasing = T),]
+cpi
+dollar <- dollar[, 1:2]
+colnames(dollar) <- c('date', '달러지수') #일간
+colnames(fed) <- c('date', '금리')#월간
+GDP <- GDP[, c(11, 13)]# 쿼터
+colnames(GDP) <- c('date', 'GDP')
+colnames(nasdaq) <- c('date', 'NASDAQ')#일간
+colnames(oil) <- c('date', '유가')#일간
+colnames(unem) <- c('date', '실업률')#
+coin_date <- bitcoin[,1]
+bit <- bitcoin[,5]
+eth <- ether[,5]
+coin_merge <- cbind(coin_date, bit, eth)
+colnames(coin_merge) <- c('date', 'Bitcoin', 'Ethereum')
+econ <- merge(fed, unem, by = 'date')
+# econ <- merge(econ, cpi, by = 'date')
+econ <- econ[order(econ$date, decreasing = T),]
+econ$date <- as.Date(econ$date)
+econ[,1:3]
 ```
 
-Main
+암호화폐
 =====================================
 
 Column {data-width=500}
 -----------------------------------------------------------------------
 
-### 비트코인 관련 정보 (**Issued at `r today`**)
+### 비트코인 거래 가격 정보 (**Issued at `r today`**)
 
 
 ```{r}
-bitcoin 
-bitcoin %>% head(20) %>%
+bitcoin %>% head(50) %>%
   kable(format="html", escape=FALSE) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
+-----------------------------------------------------------------------
 
+### 이더리움 거래 가격 정보 (**Issued at `r today`**)
+```{r}
+ether %>% head(50) %>%
+  kable(format="html", escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
 Column {data-width=500}
 -----------------------------------------------------------------------
 
-### Chat-GPT Plug-in
+### 비트코인 & 이더리움 거래가격 그래프(종가 기준)
+```{r}
+dygraph(coin_merge) %>% 
+  dyRangeSelector(height = 20)
+```
 
 
 
 
 
 
-
-거시경제지표
+경제관련지표
 =====================================
 
 Column {data-width=500}
 -----------------------------------------------------------------------
 
-### CPI (**Issued at `r today`**)
+### 금리 & 실업률 (**Issued at `r today`**)
 
 
 ```{r}
-cpi %>% head(20) %>%
-  kable(format="html", escape=FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
-```
-
-
-### GDP forecast (**Issued at `r today`**)
-
-```{r}
-GDP %>% head(20) %>%
+econ %>% head(50) %>%
   kable(format="html", escape=FALSE) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
 Column {data-width=500}
 -----------------------------------------------------------------------
-### 미국 금리 (**Issued at `r today`**)
 
+### 금리 & 실업률 그래프
 ```{r}
-fed %>% head(20) %>%
-  kable(format="html", escape=FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+dygraph(econ) %>% 
+  dyRangeSelector()
 ```
-
-
-### 실업률 (**Issued at `r today`**)
-
-```{r}
-unem %>% head(20) %>%
-  kable(format="html", escape=FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
-```
-
-
-
-투자관련지수
-=====================================
-
-Column {data-width=500}
------------------------------------------------------------------------
-### 나스닥 (**Issued at `r today`**)
-
-```{r}
-nasdaq %>% head(20) %>%
-  kable(format="html", escape=FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
-```
-
-### 국제 유가 (**Issued at `r today`**)
-
-
-```{r}
-oil %>% head(20) %>%
-  kable(format="html", escape=FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
-```
-
-
-Column {data-width=500}
------------------------------------------------------------------------
-### 금 (**Issued at `r today`**)
-
-```{r}
-gold %>% head(20) %>%
-  kable(format="html", escape=FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
-```
-
-
-### 달러지수 (**Issued at `r today`**)
-
-```{r}
-dollar %>% head(20) %>%
-  kable(format="html", escape=FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
-```
-
-
-
-

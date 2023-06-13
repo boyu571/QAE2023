@@ -1,0 +1,8 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+rsconnect
+admin.R
+down_db.R
+.httr-oauth

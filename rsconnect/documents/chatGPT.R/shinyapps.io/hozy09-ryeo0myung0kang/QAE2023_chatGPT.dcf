@@ -1,0 +1,14 @@
+name: QAE2023_chatGPT
+title: QAE2023_chatGPT
+username:
+account: hozy09-ryeo0myung0kang
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9298543
+bundleId: 7338600
+url: https://hozy09-ryeo0myung0kang.shinyapps.io/QAE2023_chatGPT/
+when: 1686650776.9976
+lastSyncTime: 1686650776.9976
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|binance.xlsx|CPI.csv|dashboard_draft.html|dashboard_draft.Rmd|data_gathering.R|dollar_index.csv|fedfunds.csv|GDP_forecast_US.csv|nasdaq100.csv|oil.csv|unem_rate.csv|xauusd.xlsx|미완성

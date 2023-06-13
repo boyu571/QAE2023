@@ -35,10 +35,19 @@ for (i in 2017:year){
   stack <- rbind(stack, annual)
 }
 View(stack)
-write_xlsx(stack, "binance.xlsx")
-# 
+write_xlsx(stack, "bitcoin.xlsx")
+
+stack <- NULL
+for (i in 2017:year){
+  annual <- binance_klines('ETHUSDT', interval = '1d', start_time = str_c(i,'-01-01'), end_time = str_c(i,'-12-31'))
+  stack <- rbind(stack, annual)
+}
+View(stack)
+write_xlsx(stack, "ethereum.xlsx")
+
+
 # library(ggplot2)
-# ggplot(stack, aes(close_time, close)) + geom_line()
+ggplot(stack, aes(close_time, close)) + geom_line()
 
 
 # 달러지수
